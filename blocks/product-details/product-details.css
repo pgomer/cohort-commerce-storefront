@@ -127,3 +127,10 @@
   overflow: hidden;
   white-space: nowrap;
 }
+
+.pdp-tagline {
+  font-size: 1.5rem;
+  color: #2d7d2d;
+  font-weight: 600;
+  margin-top: 0.25rem;
+}
