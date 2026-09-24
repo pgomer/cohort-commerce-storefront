@@ -151,26 +151,6 @@ export default async function decorate(block) {
   const $customAttribute = fragment.querySelector('.product-details__custom-attribute');
 
   block.replaceChildren(fragment);
-  
-  events.on('pdp/data', (product) => {
-      if (!product) return;
-      if (product.inStock) {
-        $stock.textContent = '● In Stock';
-        $stock.className = 'product-details__stock stock-badge stock-badge--in-stock';
-      } else {
-        $stock.textContent = '● Out of Stock';
-        $stock.className = 'product-details__stock stock-badge stock-badge--out-of-stock';
-      }
-      const value = product.metaTitle;
-      if (value) {
-        $customAttribute.innerHTML = `
-        <div class="custom-attribute">
-        <dt>Custom Meta Title - Activity 2.1</dt>
-        <dd>${value}</dd>
-        </div>
-        `;
-      }
-    }, { eager: true });
 
   if ($tagline) {
     $tagline.textContent = 'Free shipping on orders over $50';
@@ -454,6 +434,26 @@ export default async function decorate(block) {
 
   return Promise.resolve();
 }
+
+events.on('pdp/data', (product) => {
+  if (!product) return;
+  if (product.inStock) {
+    $stock.textContent = '● In Stock';
+    $stock.className = 'product-details__stock stock-badge stock-badge--in-stock';
+  } else {
+    $stock.textContent = '● Out of Stock';
+    $stock.className = 'product-details__stock stock-badge stock-badge--out-of-stock';
+  }
+  const value = product.metaTitle;
+  if (value) {
+    $customAttribute.innerHTML = `
+    <div class="custom-attribute">
+    <dt>Custom Meta Title - Activity 2.1</dt>
+    <dd>${value}</dd>
+    </div>
+    `;
+  }
+}, { eager: true });
 
 async function setJsonLdProduct(product) {
   const {
