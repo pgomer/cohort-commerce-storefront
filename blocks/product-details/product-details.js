@@ -173,9 +173,9 @@ events.on('pdp/data', (product) => {
     }
   }, { eager: true });
 
-if ($tagline) {
-  $tagline.textContent = 'Free shipping on orders over $50';
-}
+  if ($tagline) {
+    $tagline.textContent = 'Free shipping on orders over $50';
+  }
 
   const gallerySlots = {
     CarouselThumbnail: (ctx) => {
