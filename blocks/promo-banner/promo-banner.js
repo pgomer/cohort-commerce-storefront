@@ -1,8 +1,8 @@
 // Activity 2.2 Task 3 Step 2, the complete promo-banner.js file.
 import { readBlockConfig } from '../../scripts/aem.js';
 import { CS_FETCH_GRAPHQL, getProductLink } from '../../scripts/commerce.js';
-
-async function fetchCategoryProducts (categoryId, maxProducts) {
+ 
+async function fetchCategoryProducts(categoryId, maxProducts) {
   const query = `
     query GetCategoryProducts($categoryId: String!, $pageSize: Int!) {
       productSearch(
@@ -19,47 +19,48 @@ async function fetchCategoryProducts (categoryId, maxProducts) {
               url
               label
             }
-            price {
-              final { amount { value currency } }
-              regular { amount { value currency } }
+            ... on SimpleProductView {
+              price {
+                final { amount { value currency } }
+              }
             }
           }
         }
       }
     }
   `;
-
+ 
   const { data } = await CS_FETCH_GRAPHQL.fetchGraphQl(query, {
     variables: { categoryId, pageSize: maxProducts },
   });
-
+ 
   return data?.productSearch?.items || [];
 }
-
-export default async function decorate (block) {
+ 
+export default async function decorate(block) {
   const {
     'category-id': categoryId = '',
     heading = 'Featured Products',
     'max-products': maxProductsStr = '4',
   } = readBlockConfig(block);
-
+ 
   const maxProducts = parseInt(maxProductsStr, 10) || 4;
-
+ 
   block.innerHTML = `
     <div class="promo-banner__heading"><h2>${heading}</h2></div>
     <div class="promo-banner__products"><p>Loading products...</p></div>
   `;
-
+ 
   const productsContainer = block.querySelector('.promo-banner__products');
-
+ 
   try {
     const products = await fetchCategoryProducts(categoryId, maxProducts);
-
+ 
     if (products.length === 0) {
       productsContainer.innerHTML = '<p>No products found.</p>';
       return;
     }
-
+ 
     productsContainer.innerHTML = products.map((item) => {
       const product = item.productView;
       const image = product.images?.[0];
